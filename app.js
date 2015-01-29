@@ -1,5 +1,5 @@
 angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($provide) {
-		$provide.value('endpoint', 'https://http.cloud.tiny-mesh.com');
+		$provide.value('endpoint', 'http://http.cloud.tiny-mesh.com:8080');
 	})
 	.config(['$httpProvider', function($httpProvider) {
 		$httpProvider.defaults.timeout = 60000;
