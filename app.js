@@ -223,6 +223,7 @@ angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($prov
 					'filter.pick': "proto/tm.aio0,proto/tm.aio1",
 					'query': 'proto/tm.type:event',
 					'sort.by': 'datetime',
+					'data-encoding': 'binary'
 				});
 
 				res.$promise.then($scope.handleResp, function(e) {
