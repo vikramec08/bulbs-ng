@@ -198,9 +198,9 @@ angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($prov
 			var step = 3;
 			var now = new Date(),
 				since = dateToDay(new Date("2014-07-15"));
-			var days = [["NOW\/\/-" + step + "DAY", now.getUTCFullYear() + '-' + pad(now.getUTCMonth() + 1, 2) + '-' + pad(now.getUTCDate() + 1, 2)]];
+			var days = [["NOW//-" + step + "DAY", "NOW//+1DAY"]];
 			for (j = 2; j <= Math.ceil((dateToDay(now) - since) / step); j++) {
-				days.push(["NOW-" + j * step + "DAY", "NOW//+" + (j-1)*step + "DAY"])
+				days.push(["NOW//-" + j * step + "DAY", "NOW//+" + (j-1)*step + "DAY"])
 			}
 
 			$scope.loadError = days;
