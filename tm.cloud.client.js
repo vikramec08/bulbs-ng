@@ -36,6 +36,9 @@ angular.module('tmCloudClient', [
 						config.headers['Authorization'] = $localStorage.fingerprint + " " + sig;
 					}
 
+					if (url.match(/message-query/i))
+						config.headers['X-Data-Encoding'] = 'binary';
+
 					return config || $q.when(config);
 				}
 			};
