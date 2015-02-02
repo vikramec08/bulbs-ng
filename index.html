@@ -121,6 +121,10 @@
 										(<a href="" ng-click="predicate = '-consumption'; reverse=false">^</a>)
 									</th>
 									<th>
+										<a href="" ng-click="predicate = 'saved'; reverse=false">Saved Energy</a>
+										(<a href="" ng-click="predicate = '-saved'; reverse=false">^</a>)
+									</th>
+									<th>
 										<a href="" ng-click="predicate = 'latest'; reverse=false">Power Status</a>
 										(<a href="" ng-click="predicate = '-latest'; reverse=false">^</a>)
 									</th>
@@ -131,6 +135,7 @@
 								<td>{{dev.online}}</td>
 								<td>{{dev.wattage}}</td>
 								<td>{{dev.consumption}}</td>
+								<td>{{dev.saved}}</td>
 								<td>
 									<span ng-if="'online' === dev.power_status" class="label label-success">Online</span>
 									<span ng-if="'offline' === dev.power_status" class="label label-danger">Offline &ndash; since {{dev.latest| fuzzyDate}}</span>

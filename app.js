@@ -155,6 +155,7 @@ angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($prov
 				if (!$scope.devicemap[idx]) { $scope.devicemap[idx] = {}; }
 
 				$scope.devicemap[idx].wattage = Math.round(lastwattage * 10) / 10;
+				//$scope.devicemap[idx].wattage = 7;
 				$scope.devicemap[idx].totalwattage = totalwattage
 
 				if (_.size(items) > 0) {
@@ -162,6 +163,7 @@ angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($prov
 					$scope.devicemap[idx].online = online;
 					$scope.devicemap[idx].consumption = Math.round((online * totalwattage) * 10) / 10;
 					//$scope.devicemap[idx].consumption = Math.round((online * lastwattage) * 10) / 10;
+					$scope.devicemap[idx].saved = Math.round((online * 53) * 10) / 10;
 				} else {
 					$scope.devicemap[idx].online = -1;
 				}
@@ -188,9 +190,10 @@ angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($prov
 				v.key = k;
 				v.power_status = "unknown";
 				v.online = 0;
-				v.wattage = 0;
+				v.wattage = 0; //7;
 				v.consumption = 0;
 				v.latest = 0;
+				v.saved = 0;
 				var length = $scope.devicemap.push(v);
 				$scope.devicekeys[v.key] = length - 1;
 			});
@@ -221,7 +224,7 @@ angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($prov
 					'date.from': from,
 					'date.to': to,
 					'filter.pick': "proto/tm.aio0,proto/tm.aio1",
-					'query': 'proto/tm.type:event',
+					'query': 'proto/tm.type:event,proto/tm.detail:ima',
 					'sort.by': 'datetime'
 				});
 
