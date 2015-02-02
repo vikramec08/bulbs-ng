@@ -159,7 +159,7 @@ angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($prov
 				$scope.devicemap[idx].totalwattage = totalwattage
 
 				if (_.size(items) > 0) {
-					var online = _.size(items) / 20;
+					var online = Math.round((_.size(items) / 12) * 10) / 10;
 					$scope.devicemap[idx].online = online;
 					$scope.devicemap[idx].consumption = Math.round((online * totalwattage) * 10) / 10;
 					//$scope.devicemap[idx].consumption = Math.round((online * lastwattage) * 10) / 10;
