@@ -66,6 +66,15 @@ angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($prov
 			$scope.filterStatus = filter;
 		};
 
+		$scope.sort = function(predicate) {
+			if (predicate === $scope.predicate)
+				$scope.reverse = !$scope.reverse;
+			else
+				$scope.reverse = false;
+
+			$scope.predicate = predicate;
+		};
+
 		var pad = function(n, width, z) {
 			z = z || '0';
 			n = n + '';
@@ -126,6 +135,7 @@ angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($prov
 			$scope.load[0]++;
 		};
 
+		var imaint = 5;
 		$scope.recalculate = function(data, latest) {
 			_.each(latest, function(time, idx) {
 				$scope.devicemap[idx].latest = time;
@@ -141,16 +151,28 @@ angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($prov
 
 			_.each(data, function(items, idx) {
 				var totalwattage = 0,
-					lastwattage = 0;
+					lastwattage = 0,
+					dailyavg = {},
+					imainterval = 5
+					previma = null;
 
 				_.each(items, function(item, k) {
-					var date = new Date(k).getTime();
-					if (date >= latest[idx]) {
+					var date = new Date(k);
+					day = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+					if (date.getTime() >= latest[idx]) {
 						lastwattage = ((item.volt * item.current) / 0.85);
 					}
 
+					dailyavg[day] = (dailyavg[day] || 0) + 1;
+
 					totalwattage = (totalwattage + ((item.volt * item.current) / 0.85)) / 2;
+
+					if (previma)
+						imainterval = Math.round((date.getTime() - previma) / 60 / 1000)
+
+					previma = date.getTime()
 				});
+
 
 				if (!$scope.devicemap[idx]) { $scope.devicemap[idx] = {}; }
 
@@ -158,15 +180,48 @@ angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($prov
 				//$scope.devicemap[idx].wattage = 7;
 				$scope.devicemap[idx].totalwattage = totalwattage
 
+				var totalonline;
 				if (_.size(items) > 0) {
-					var online = Math.round((_.size(items) / 12) * 10) / 10;
-					$scope.devicemap[idx].online = online;
-					$scope.devicemap[idx].consumption = Math.round((online * totalwattage) * 10) / 10;
-					//$scope.devicemap[idx].consumption = Math.round((online * lastwattage) * 10) / 10;
-					$scope.devicemap[idx].saved = Math.round((online * 53) * 10) / 10;
+
+
+					totalonline = Math.round((_.size(items) * imaint / 60) * 10) / 10;
+					// dailyavg is calculated from a first received msg to
+					// today, this means if there are holes in the middle
+					// of the data set it will negatively effect the
+					// average but missing data at the start of the dataset
+					// will not.
+					var today = new Date()
+					var weeklyAvg = [0,0,0,0,0,0,0]
+					_.each(dailyavg, function(v, k) {
+						var diff = today.getTime() - (new Date(k)).getTime()
+						var days = Math.trunc(diff / 1000 / 86400)
+						weeklyAvg[weeklyAvg.length - days] = v
+					})
+
+					$scope.devicemap[idx].online = Math.round((_.reduce(weeklyAvg, function(acc, v) {
+						return (((0 === acc) ? v : acc) + v) / 2
+					}, 0) * imaint / 60) * 10) / 10
+
+					$scope.devicemap[idx].saved = Math.round((totalonline * 53) * 10) / 10;
+
+
+//					totalonline = Math.round((_.size(items) / (60/imaint)) * 10) / 10;
+//					$scope.devicemap[idx].online = _.reduce(dailyavg, function(acc, v) {
+//						var dayval = Math.round((v * imaint / 60) * 10) / 10
+//						return (acc > 0 ? acc : dayval) + dayval / 2
+//					}, 0)
+//					//$scope.devicemap[idx].consumption = Math.round((online * totalwattage) * 10) / 10;
+//
+//
+//
 				} else {
 					$scope.devicemap[idx].online = -1;
 				}
+
+				//console.log('avg', $scope.devicemap[idx].key, dailyavg, $scope.devicemap[idx].online, totalonline)
+
+
+				$scope.devicemap[idx].imainterval = imainterval;
 
 
 			});
@@ -198,7 +253,7 @@ angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($prov
 				$scope.devicekeys[v.key] = length - 1;
 			});
 
-			var step = 3;
+			var step = 7;
 			var now = new Date(),
 				since = dateToDay(new Date("2014-07-15"));
 			var days = [["NOW//-" + step + "DAY", "NOW//+1DAY"]];

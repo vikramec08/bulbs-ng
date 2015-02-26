@@ -24,10 +24,10 @@
 
 	<body ng-controller="AuthController">
 
-		<div class="container">
+		<div class="container-fluid">
 
-			<div ng-if="false === auth">
-			 <div class="container" ng-controller="LoginController">
+			<div ng-if="false === auth" class="row">
+			 <div  ng-controller="LoginController">
 				 <form class="box col-md-4 col-md-push-4" name="loginForm"
 					 ng-submit="login(email, password)">
 					 <div class="page-header">
@@ -60,7 +60,7 @@
 
 			<div
 				ng-if="false !== auth"
-				class="col-xs-10 col-xs-push-1"
+				class="col-xs-12"
 				ng-controller="DeviceStatusController">
 
 				<div class="row">
@@ -82,7 +82,7 @@
 						<div ng-if="network" class="dropdown-toggle pull-left">
 							&nbsp;
 							<button type="button" class="btn btn-default">
-								Power Status: {{filterStatus || 'All'}} <span class="caret"></span>
+								Status: {{filterStatus || 'All'}} <span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu" role="menu">
 								<li ng-repeat="(t, v) in statuses">
@@ -131,46 +131,39 @@
 						<table class="table table-striped table-bordered">
 							<tr>
 									<th>
-										<a href="" ng-click="predicate = 'address'; reverse=false">UID</a>
-										(<a href="" ng-click="predicate = '-address'; reverse=false">^</a>)
+										<a href="" ng-click="sort('address')">UID</a>
 									</th>
 									<th>
-										<a href="" ng-click="predicate = 'name'; reverse=false">Name</a>
-										(<a href="" ng-click="predicate = '-name'; reverse=false">^</a>)
+										<a href="" ng-click="sort('name')">Consumer ID</a>
 									</th>
 									<th>
-										<a href="" ng-click="predicate = 'online'; reverse=false">Hours Online</a>
-										(<a href="" ng-click="predicate = '-online'; reverse=false">^</a>)
+										<a href="" ng-click="sort('wattage')">Bulb Wattage [W]</a>
 									</th>
 									<th>
-										<a href="" ng-click="predicate = 'wattage'; reverse=false">Wattage [W]</a>
-										(<a href="" ng-click="predicate = '-wattage'; reverse=false">^</a>)
+										<a href="" ng-click="sort('online')">Average pr.  day running hours</a>
 									</th>
 									<th>
-										<a href="" ng-click="predicate = 'consumption'; reverse=false">Power Consumption [Wh]</a>
-										(<a href="" ng-click="predicate = '-consumption'; reverse=false">^</a>)
+										<a href="" ng-click="sort('saved')">Cumulative Saved Energy (last 7 days)</a>
 									</th>
 									<th>
-										<a href="" ng-click="predicate = 'saved'; reverse=false">Saved Energy</a>
-										(<a href="" ng-click="predicate = '-saved'; reverse=false">^</a>)
+										<a href="" ng-click="sort('latest')">Status</a>
 									</th>
 									<th>
-										<a href="" ng-click="predicate = 'latest'; reverse=false">Power Status</a>
-										(<a href="" ng-click="predicate = '-latest'; reverse=false">^</a>)
+										<a href="" ng-click="sort('created')">Deployment Date</a>
 									</th>
 							</tr>
 							<tr ng-repeat="(k, dev) in filteredDevices = (devicemap | filter:filterType | filter:filterStatus) | orderBy:predicate:reverse track by dev.key">
 								<td>{{dev.address | address:"hex"}}</td>
 								<td>{{dev.name || "Unnamed device - " + dev.key}}</td>
-								<td>{{dev.online}}</td>
 								<td>{{dev.wattage}}</td>
-								<td>{{dev.consumption}}</td>
+								<td>{{dev.online}}</td>
 								<td>{{dev.saved}}</td>
 								<td>
 									<span ng-if="'online' === dev.power_status" class="label label-success">Online</span>
 									<span ng-if="'offline' === dev.power_status" class="label label-danger">Offline &ndash; since {{dev.latest| fuzzyDate}}</span>
 									<span ng-if="'unknown' === dev.power_status" class="label label-default">Unknown status</span>
 								</td>
+								<td>{{dev.created}}</td>
 							</tr>
 							<tr ng-hide="filteredDevices.length">
 								<td colspan="6"><center>No items found, either a empty network or restricted by filter.</center></td></tr>
