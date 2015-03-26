@@ -290,10 +290,10 @@
 									<td ng-if="params.debug">{{dev.key}}</td>
 									<td>{{dev.address | address:"hex"}}</td>
 									<td>{{dev.name || "Unnamed device - " + dev.key}}</td>
-									<td title="min: {{dev.energy.wattage[1] | number:1}}, max: {{dev.energy.wattage[2] | number:1}}">
+									<td title="min: {{dev.energy.wattage[1] | number:1}}, max: {{dev.energy.wattage[2] | number:1}}, days with data: {{dev.nDays}}">
 										{{dev.energy.wattage[0] | number : 1}}
 									</td>
-									<td title="min: {{dev.energy.avgConsumption[1] | number:1}}, max: {{dev.energy.avgConsumption[2] | number:1}}">
+									<td title="min: {{dev.energy.avgConsumption[1] | number:1}}, max: {{dev.energy.avgConsumption[2] | number:1}}, days with data: {{dev.nDays}}">
 										{{dev.energy.avgConsumption[0] | number : 1}}
 									</td>
 									<td>{{dev.energy.savedWh | number : 0}}</td>

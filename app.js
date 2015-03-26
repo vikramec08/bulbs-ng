@@ -147,6 +147,7 @@ angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($prov
 					name: input.name,
 					type: input.type,
 					msgs: {},
+					nDays: 0, // days with data in selected query
 					energy: {
 						saved: 0,
 						savedWh: 0,
@@ -339,6 +340,7 @@ angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($prov
 							(_.min(_.values(dev.energy.consumption)) / 60) || 0,
 							(_.max(_.values(dev.energy.consumption)) / 60) || 0
 						]
+						dev.nDays = _.size(dev.msgs)
 					});
 
 					return resp
