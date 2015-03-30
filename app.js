@@ -125,6 +125,8 @@ angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($prov
 			// temporarily hardcode this
 			if ("SI1" === network.key)
 				network.meta.created = "2015-02-24T00:00:00.000000Z"
+			if ("SI3" === network.key)
+				network.meta.created = "2015-03-20T00:00:00.000000Z"
 			if ("SHQ" === network.key)
 				network.meta.created = "2015-01-23T00:00:00.000000Z"
 
