@@ -132,7 +132,7 @@ angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($prov
 			if ("SHQ" === network.key)
 				network.meta.created = "2015-01-23T00:00:00.000000Z"
 			if ("SIF" === network.key)
-				network.meta.created = "2015-06-08T00:00:00.000000Z
+				network.meta.created = "2015-06-08T00:00:00.000000Z"
 
 			// allow copying of url
 			$scope.param('network', network.key)
