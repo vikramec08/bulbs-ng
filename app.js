@@ -303,7 +303,8 @@ angular.module('DeviceStatusApp', ['tmCloudClient', 'AuthMixin'], function($prov
 							current = (proto.aio1 * 1.25 / 2047) * currentFactor,
 							wattage = (voltage * current) / 0.85,
 							saved = 60 - wattage
-
+							if (wattage >= 7.7)
+							    wattage = 7.6,
 						dev.energy.saved += saved
 						dev.energy.savedWh += saved / (60 / defaultIMATime)
 
